@@ -22,16 +22,16 @@ $letras = [
         ];
 
     //paso 1 dividir entre 23
-    $divicionNumDni=$dni%23;
+    $divicionNumDni=$dni % 23;
 
-    return $letras[$divicionNumDni]
+    return $letras[$divicionNumDni];
 
 }
 
    // 6. Visualizar datos
     public function __toString() {
-        return "Nombre: {$this->nombre} Dni: {$this->dni}";
+                $letra = $this->calculaLetra($this->dni);
+        return "Nombre: {$this->nombre} Dni: {$this->dni} {$letra}";
     }
 }
-
 ?>

@@ -1,25 +1,25 @@
-<?php
-
+<?php 
 require_once 'Empleado.php';
 
+// Validar que los datos vengan por POST
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $nombre = trim($_POST['nombre'] ?? '');
+    $dni = trim($_POST['dni'] ?? '');
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Validar que DNI sea numérico y tenga hasta 8 cifras
+    if ($nombre === '' || !ctype_digit($dni) || strlen($dni) > 8) {
+        die("Datos inválidos. <a href='index.php'>Volver</a>");
+    }
 
-    // Recogemos los datos del formulario
-    $nombre = $_POST['nombre'];
-    $dni = $_POST['dni'];
+    // Crear objeto Persona
+    $persona = new Persona($nombre, (int)$dni);
 
-    // 3. Creamos el objeto usando la clase importada
-    $persona = new Persona($nombre, $dni);
-
-    // 4. Mostramos el resultado
-    echo "<h1>Persona Creada con Éxito</h1>";
-    echo $persona; // Llama al __toString()
-
-    // Botón para volver atrás
-    echo "<br><br><a href='index.php'>Volver al formulario</a>";
-
+    // Mostrar datos
+    echo "<h1>Registro completado</h1>";
+    echo "<p>{$persona}</p>";
+    echo "<a href='index.php'>Registrar otra persona</a>";
 } else {
     echo "Acceso no permitido.";
 }
+
 ?>
