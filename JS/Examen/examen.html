@@ -1,26 +1,35 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+    <link rel="stylesheet" href="examen.css" />
   </head>
   <body>
-    <h1>Infomaci&oacute;n Usuario</h1>
-    <br />
-    <label for="dni">dni:</label>
-    <input type="text" id="dni" /><br /><br />
+    <main>
+      <div class="central"></div>
+      <div class="texto">
+        <h1>Infomaci&oacute;n Usuario</h1>
+        <br />
+        <label for="dni">dni:</label>
+        <input type="text" id="dni" name="dni" required /><br /><br />
 
-    <label for="nombre">Nombre:</label>
-    <input type="text" id="nombre" /><br /><br />
+        <label for="nombre">Nombre:</label>
+        <input type="text" id="nombre" /><br /><br />
 
-    <label for="edad">edad:</label>
-    <input type="number" id="edad" /><br /><br />
+        <label for="edad">edad:</label>
+        <input type="number" id="edad" /><br /><br />
 
-    <label for="telefono">telefono:</label>
-    <input type="number" id="telefono" /><br /><br />
-    <button>agregar</button>
-    <button>ocultar/mostrar</button>
-    <button>desmarcar</button>
+        <label for="telefono">telefono:</label>
+        <input type="number" id="telefono" /><br /><br />
+      </div>
+      <div class="botones">
+        <button name="btnAgregar">agregar</button>
+        <button>ocultar/mostrar</button>
+        <button>desmarcar</button>
+      </div>
+    </main>
+    <script src="examen.js"></script>
   </body>
 </html>

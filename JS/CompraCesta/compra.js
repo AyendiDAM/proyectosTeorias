@@ -67,7 +67,9 @@ todosBotones.forEach((miBoton) => {
         const tdArt = document.createElement('td')
         const tdPrecio = document.createElement('td')
         const tdTotal = document.createElement('td')
-
+        const tdEliminar = document.createElement('button')
+        tdEliminar.textContent = 'eliminar'
+        tdEliminar.value = 5
         tdUni.textContent = 1
         tdArt.textContent = compra[valoBotones].nombre
         tdPrecio.textContent = compra[valoBotones].precio
@@ -78,6 +80,34 @@ todosBotones.forEach((miBoton) => {
         trTabla.appendChild(tdArt)
         trTabla.appendChild(tdPrecio)
         trTabla.appendChild(tdTotal)
+        trTabla.appendChild(tdEliminar)
+
+        //evento eliminar
+        tdEliminar.addEventListener('click', () => {
+          //let todosTr = document.querySelectorAll('td')
+          //let cantidadActual = parseInt(celdas[0].textContent)
+          console.log('primer log' + trTabla.textContent)
+          let tablaHija = trTabla.querySelector('td')
+
+          if (tablaHija.textContent == 1) {
+            trTabla.remove()
+          } else {
+            let arrayTodo = trTabla.querySelectorAll('td') //busca todos los td
+            arrayTodo[0].textContent = arrayTodo[0].textContent - 1
+            arrayTodo[3].textContent = compra[valoBotones].precio * arrayTodo[0].textContent
+          }
+        })
+
+        //Elimina un curso del carrito
+        function eliminarCurso(e) {
+          if (e.target.classList.contains('borrar-curso')) {
+            const cursoId = e.target.getAttribute('data-id')
+
+            //Elimina del arreglo de articuloCarrito por el data-id
+            articulosCarrito = articulosCarrito.filter((curso) => curso.id !== cursoId)
+            carritoHTML() //iterar sobre el carrito y mostrar su HTML
+          }
+        }
       }
     }
   })
@@ -110,23 +140,8 @@ trTabla.appendChild(tdTotal)
 body.appendChild(tablaUnidades)
 const espacio = document.createElement('br')
 body.appendChild(espacio)
-const btnEliminar = document.createElement('button')
-btnEliminar.value = 5
-btnEliminar.textContent = 'Elimnar'
-body.appendChild(btnEliminar)
+
 const btnPagar = document.createElement('button')
 btnPagar.value = 6
 btnPagar.textContent = 'Pagar'
 body.appendChild(btnPagar)
-
-// Obtener todos los botones de eliminar del carrito
-const botonesBorrar = document.querySelectorAll('button')
-botonesBorrar.forEach((boton) => {
-  if (boton.value == 5) {
-    boton.addEventListener('click', (e) => {
-      // Obtener el id del producto a eliminar desde el atributo data-id del botón
-      const filasProductos = tablaUnidades.querySelectorAll('tr[id^="fila-"]')
-      filasProductos.forEach((fila) => fila.remove())
-    })
-  }
-})
