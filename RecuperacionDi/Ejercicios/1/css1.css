@@ -1,0 +1,18 @@
+.articulo::first-letter {
+  font-size: 2.5em;
+  /* Aumenta el tamaño de la primera letra */
+  color: #007bff;
+  float: left; /* La hace flotar para que el texto la rodee */
+
+  line-height: 1;
+  margin-right: 5px;
+}
+
+.articulo::first-letter {
+  font-weight: bold;
+}
+
+p::selection {
+  background-color: #007bff;
+  color: white;
+}
