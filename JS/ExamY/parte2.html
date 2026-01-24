@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EXAMEN RECUPERACIÓN 1ª EVALUACIÓN</title>
+    <style>
+        /* Estilos básicos para visualizar los divs */
+        body { font-family: sans-serif; margin: 20px; background-color: #f4f4f4; }
+        .contenedor-principal { width: 80%; margin: auto; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        .seccion { margin-bottom: 20px; padding: 15px; border: 1px solid #ddd; background-color: #e9e9e9; border-radius: 5px; }
+        .encabezado { background-color: #333; color: white; padding: 10px; border-radius: 5px; }
+        .contenido-lista { background-color: #fff; padding: 10px; border: 1px dashed #ccc; }
+        ul { list-style-type: square; padding-left: 20px; }
+        li { margin-bottom: 8px; }
+    </style>
+</head>
+<body>
+
+    <div class="contenedor-principal"> 
+
+        <div class="seccion encabezado"> 
+            <h1>Organizador de tareas</h1>
+        </div>
+
+        <div class="seccion"> 
+            <h2>Mi lista de tareas</h2>
+            <p>Esta página me ayudará a organizar mis tareas</p>
+        </div>
+        <div class="seccion">
+        <table><tr><td>
+                 
+            <div class="contenido-lista">
+                <h3>Mi Lista de Tareas Favoritas</h3>
+                <ul id="listafav"> 
+                    <li>Actualizar el SO</li>
+                    <li>Configurar la red</li>
+                    <li>Desfragmentar disco</li>
+                    <li>Ampliar Memoria Ram</li>
+                </ul>
+            </div>
+        
+            </td>
+            <td>
+                <div class="contenido-lista">
+                <h3>Mi Lista de Tareas Urgentes</h3>
+                <ol id="listaodi"> 
+                    <li value="0">Practicar Javascript</li>
+                    <li value="1">Aprender HTML y CSS</li>
+                    <li value="2">Practicar PHP</li>
+                </ul> 
+            </div>
+            </td>
+        </tr>
+        </table>
+            
+        </div>
+
+        <div class="seccion1">
+            <h2>Introduce nueva tarea favorita: <input type="text" id="tarea" class="tarea">
+            <button class="btn">Agregar</button></h2>
+        </div>
+        <div class="seccion">
+            <h2>Introduce el número de tarea completada: <input size="5" type="text" id="completada" class="tarea">
+            <button class="btn2">Marcar</button></h2>
+        </div>
+
+    </div>
+      <script src="parte2.js"></script>
+</body>
+</html>

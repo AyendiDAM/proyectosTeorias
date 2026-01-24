@@ -1,0 +1,3 @@
+DNI=55052460b es admin
+DNI=55052460c es analista
+DNI=55052460I es votante

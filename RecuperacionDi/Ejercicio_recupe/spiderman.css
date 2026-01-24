@@ -1,0 +1,176 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  width: 100%;
+  height: 100%;
+  background-color: rgb(12, 12, 12);
+  text-align: center;
+  align-items: center;
+}
+#titulo {
+  font-size: 20px;
+}
+main {
+  width: 70%;
+  height: 70%;
+  border: 5px solid #007bff;
+  margin-top: 15px;
+}
+
+body main {
+  width: 70%;
+  height: 50%;
+  border: 5px solid #777baa;
+  margin-top: 15px;
+}
+/*
+Preguntar al profesor
+*/
+#titulo::after {
+  content: '                                  __________________________________________________________________________________ ';
+  color: #007bff;
+}
+#interfaz {
+  width: 70%;
+  height: 50%;
+  border: 5px solid #ff0000;
+  margin-top: 15px;
+}
+
+/*
+Hijo directo
+*/
+
+body > main {
+  width: 70%;
+  height: 70%;
+  border: 5px solid #0d00ff;
+  margin-top: 15px;
+}
+
+/*
+Hermano adyacente
+*/
+main + footer {
+  text-align: center;
+}
+
+/*
+selector de atributo
+*/
+main[role='main'] {
+  width: 70%;
+  height: 50%;
+  border: 5px solid #04ff00;
+  margin-top: 15px;
+}
+/*
+pseudo-clase
+*/
+main > :first-child {
+  text-align: center;
+  color: #ff0000;
+}
+.encabezado > :first-child:before {
+  content: '>> ';
+  color: #007bff;
+}
+
+.valor-peligro {
+  color: red;
+}
+.menu > :first-child {
+  background-color: red;
+}
+
+.menu {
+  display: flex;
+  gap: 20px;
+  background-color: black;
+  margin: 10px;
+  padding: 10px;
+  justify-content: center;
+  border-radius: 5px;
+}
+
+a {
+  text-decoration: none;
+  font-size: 15px;
+  border-radius: 5px;
+  padding: 5px;
+}
+a:nth-child(3) {
+  color: white;
+}
+a:nth-child(2) {
+  color: black;
+  background-color: blue;
+}
+a:nth-child(1) {
+  color: black;
+  background-color: red;
+}
+
+.carga-web-shooter {
+  display: flex;
+  gap: 15px;
+}
+.carga-web-shooter > .etiqueta {
+  color: #0d00ff;
+}
+.cartuchos-contenedor {
+  display: flex;
+  flex-direction: row;
+  width: 300px;
+  height: 20px;
+  background-color: black;
+  border-radius: 5px;
+}
+
+.carga-baja {
+  width: 100px;
+  height: 20px;
+  background-color: red;
+  order: 1;
+}
+
+.carga-media {
+  order: 3;
+  width: 150px;
+  height: 20px;
+  background-color: orange;
+}
+h3 {
+  color: white;
+}
+.modulos-datos {
+  display: flex;
+  background-color: black;
+  gap: 7px;
+}
+.modulo-radar {
+  flex-grow: 1;
+  background-color: #ff0000;
+}
+.modulo-objetivo {
+  flex-grow: 20;
+  background-color: #04ff00;
+}
+
+.modulo-notas {
+  flex-grow: 2;
+  background-color: aqua;
+}
+
+.modulo {
+  display: flex;
+}
+.detalle-grid {
+  display: flex;
+}
+.detalle-grid span {
+  border-radius: 5px;
+  background-color: antiquewhite;
+}
