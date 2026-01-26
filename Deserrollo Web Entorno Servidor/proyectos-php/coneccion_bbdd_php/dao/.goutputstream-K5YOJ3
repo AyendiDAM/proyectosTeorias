@@ -1,0 +1,24 @@
+
+
+<?php
+
+class ConexionBBDD{
+    private $host;
+     private $usuario;
+      private $pass;
+       private $baseDatos;
+        private $conexion;
+
+        
+    public function __construct(){
+        $this->host='localhost';
+          $this->usuario='root';
+            $this->pass='1234';
+            $this->baseDatos='bbdd_arr_contactos';
+            $this->conexion=new mysqli($this->host,$this->usuario,$this->pass,$this->baseDatos);
+            //comprobamos la conexion
+            
+
+    }
+    
+    }
