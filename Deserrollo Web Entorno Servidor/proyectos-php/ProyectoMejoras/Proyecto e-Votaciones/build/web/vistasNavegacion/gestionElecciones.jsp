@@ -110,7 +110,7 @@ font-weight: bold;
                         <button type="submit" class="btn btn-abrir">Abrir Escrutinio</button>
                     </form>
                     <% } else if (e.getEstado().equals("ABIERTA")) {%>
-                    <form action="../ModificarEstadoEleccionServlet" method="POST">
+                    <form action="../GestionModificarEleccionServlet" method="POST">
                         <input type="hidden" name="id" value="<%= e.getId()%>">
                         <input type="hidden" name="accion" value="FINALIZADA">
                         <button type="submit" class="btn btn-fin">Finalizar Elección</button>

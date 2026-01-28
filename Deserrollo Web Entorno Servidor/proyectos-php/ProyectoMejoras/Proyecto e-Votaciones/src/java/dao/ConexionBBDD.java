@@ -65,6 +65,173 @@ public class ConexionBBDD {
         this.sentencia = this.conexion.createStatement();
 
     }
+    public ArrayList<String[]> obtenerResultados(int idEleccion) throws Exception {
+        ArrayList<String[]> resultados = new ArrayList<>();
+
+        // CONSULTA SQL EXPLICADA:
+        // 1. Seleccionamos nombre y logo del partido.
+        // 2. COUNT(v.id_voto): Contamos cuántos votos tiene ese partido en ESTA elección.
+        // 3. Subconsultas (SELECT c.nombre...): Buscamos el nombre y apellido del candidato que tenga numero_lista = 1.
+        // 4. LEFT JOIN: Usamos LEFT JOIN para que salgan los partidos aunque tengan 0 votos.
+        // 5. ORDER BY total_votos DESC: El que más votos tenga sale primero (el Ganador).
+        String sql = "SELECT p.nombre, p.logo, COUNT(v.id_voto) as total_votos, "
+                + "(SELECT c.nombre FROM candidato c WHERE c.id_partido = p.id_partido AND c.numero_lista = 1) as presidenciable, "
+                + "(SELECT c.apellidos FROM candidato c WHERE c.id_partido = p.id_partido AND c.numero_lista = 1) as apellido_presi "
+                + "FROM partido_politico p "
+                + "LEFT JOIN voto v ON p.id_partido = v.id_partido AND v.id_eleccion = ? "
+                + "GROUP BY p.id_partido "
+                + "ORDER BY total_votos DESC";
+
+        PreparedStatement pst = conexion.prepareStatement(sql);
+        pst.setInt(1, idEleccion);
+        ResultSet rs = pst.executeQuery();
+
+        while (rs.next()) {
+            String[] fila = new String[4];
+
+            // Posición 0: Nombre del Partido
+            fila[0] = rs.getString("nombre");
+
+            // Posición 1: Número de Votos
+            fila[1] = String.valueOf(rs.getInt("total_votos"));
+
+            // Posición 2: Nombre Completo del Candidato a Presidente
+            String nombreP = rs.getString("presidenciable");
+            String apeP = rs.getString("apellido_presi");
+
+            if (nombreP != null) {
+                fila[2] = nombreP + " " + apeP;
+            } else {
+                fila[2] = "Sin Candidato";
+            }
+
+            // Posición 3: Nombre del archivo de imagen (Logo)
+            fila[3] = rs.getString("logo");
+
+            resultados.add(fila);
+        }
+        return resultados;
+    }
+    
+    // MÉTODO 1: DESGLOSE POR LOCALIDAD
+// ¿Por qué? Para ver qué votó cada pueblo individualmente.
+
+    public ArrayList<String[]> obtenerResultadosPorLocalidad(int idEleccion) throws Exception {
+        ArrayList<String[]> lista = new ArrayList<>();
+
+        // EXPLICACIÓN SQL:
+        // Unimos VOTO -> LOCALIDAD (para sacar el nombre del pueblo) -> PARTIDO (para saber a quién votaron).
+        // Agrupamos por (Pueblo + Partido) y contamos.
+        String sql = "SELECT l.nombre as localidad, p.nombre as partido, p.siglas, COUNT(v.id_voto) as votos "
+                + "FROM voto v "
+                + "JOIN localidad l ON v.id_localidad = l.id_localidad "
+                + "JOIN partido_politico p ON v.id_partido = p.id_partido "
+                + "WHERE v.id_eleccion = ? "
+                + "GROUP BY l.id_localidad, p.id_partido "
+                + "ORDER BY l.nombre ASC, votos DESC"; // Ordenado por pueblo A-Z y luego por votos
+
+        PreparedStatement pst = conexion.prepareStatement(sql);
+        pst.setInt(1, idEleccion);
+        ResultSet rs = pst.executeQuery();
+
+        while (rs.next()) {
+            String[] fila = new String[4];
+            fila[0] = rs.getString("localidad");
+            fila[1] = rs.getString("partido");
+            fila[2] = rs.getString("siglas");
+            fila[3] = String.valueOf(rs.getInt("votos"));
+            lista.add(fila);
+        }
+        return lista;
+    }
+
+// MÉTODO 2: DESGLOSE POR COMUNIDAD AUTÓNOMA
+// ¿Por qué? Para ver los totales regionales (sumando los votos de todos los pueblos de esa comunidad).
+    public ArrayList<String[]> obtenerResultadosPorComunidad(int idEleccion) throws Exception {
+        ArrayList<String[]> lista = new ArrayList<>();
+
+        // EXPLICACIÓN SQL:
+        // El voto tiene localidad. La localidad tiene comunidad. Hacemos el camino completo:
+        // VOTO -> LOCALIDAD -> COMUNIDAD -> PARTIDO
+        // Usamos 'l.id_comunidad' que es como se llama tu columna en la foto image_cc1a81.png
+        String sql = "SELECT c.nombre as comunidad, p.nombre as partido, p.siglas, COUNT(v.id_voto) as votos "
+                + "FROM voto v "
+                + "JOIN localidad l ON v.id_localidad = l.id_localidad "
+                + "JOIN comunidad_autonoma c ON l.id_comunidad = c.id_comunidad "
+                + "JOIN partido_politico p ON v.id_partido = p.id_partido "
+                + "WHERE v.id_eleccion = ? "
+                + "GROUP BY c.id_comunidad, p.id_partido "
+                + "ORDER BY c.nombre ASC, votos DESC";
+
+        PreparedStatement pst = conexion.prepareStatement(sql);
+        pst.setInt(1, idEleccion);
+        ResultSet rs = pst.executeQuery();
+
+        while (rs.next()) {
+            String[] fila = new String[4];
+            fila[0] = rs.getString("comunidad");
+            fila[1] = rs.getString("partido");
+            fila[2] = rs.getString("siglas");
+            fila[3] = String.valueOf(rs.getInt("votos"));
+            lista.add(fila);
+        }
+        return lista;
+    }
+    
+    // 1. Comprobar si un usuario ya ha votado en una elección específica
+    public boolean yaHaVotado(int idUsuario, int idEleccion) throws Exception {
+        String sql = "SELECT id_voto FROM voto WHERE id_usuario = ? AND id_eleccion = ?";
+        PreparedStatement pst = conexion.prepareStatement(sql);
+        pst.setInt(1, idUsuario);
+        pst.setInt(2, idEleccion);
+        return pst.executeQuery().next();
+    }
+
+    // 2. Registrar el voto
+    public boolean registrarVoto(int idUsuario, int idEleccion, int idPartido) throws Exception {
+    //1 recuperamos el id_localidad usuario consultando el censo
+    //2: hacemos un Join entre usuario y persona_censo usuando el dni
+// 1. Averiguar la localidad del usuario (JOIN con el censo)
+        int idLocalidad = 0;
+        String sqlLocalidad = "SELECT p.id_localidad FROM persona_censo p "
+                + "JOIN usuario u ON u.dni = p.dni "
+                + "WHERE u.id_usuario = ?";
+
+        PreparedStatement pstLoc = conexion.prepareStatement(sqlLocalidad);
+        pstLoc.setInt(1, idUsuario);
+        ResultSet rsLoc = pstLoc.executeQuery();
+
+        if (rsLoc.next()) {
+            idLocalidad = rsLoc.getInt("id_localidad");
+        }
+
+        // 2. Insertar el voto (INCLUYENDO LA FECHA AUTOMÁTICA)
+        // Usamos NOW() para que MySQL ponga la fecha y hora exacta de este momento
+        String sqlInsert = "INSERT INTO voto (id_usuario, id_eleccion, id_partido, id_localidad, fecha_voto) "
+                + "VALUES (?, ?, ?, ?, NOW())";
+
+        PreparedStatement pst = conexion.prepareStatement(sqlInsert);
+        pst.setInt(1, idUsuario);
+        pst.setInt(2, idEleccion);
+        pst.setInt(3, idPartido);
+        pst.setInt(4, idLocalidad);
+
+        int insertado = pst.executeUpdate();
+
+        if (insertado > 0) {
+            // 3. Marcar que ha votado en la tabla usuario
+            String sqlUpdate = "UPDATE usuario SET ha_votado = 1 WHERE id_usuario = ?";
+            PreparedStatement pstUp = conexion.prepareStatement(sqlUpdate);
+            pstUp.setInt(1, idUsuario);
+            pstUp.executeUpdate();
+            return true;
+        }
+        return false;
+        
+
+        
+    }
+    
     // 1. Validar si hay alguna elección ACTIVA (Abierta o Cerrada)
     // Regla: Solo puede haber 1 proceso electoral activo a la vez para no liar al votante.
 

@@ -8,11 +8,13 @@ import dao.ConexionBBDD;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import modelos.Eleccion;
 import modelos.Usuario;
 
 /**
@@ -34,62 +36,53 @@ public class GestionVotoServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            HttpSession sesion = request.getSession(true);
+            HttpSession session = request.getSession();
+            Usuario usuario = (Usuario) session.getAttribute("usuarioLogueado");
+            int idPartido = Integer.parseInt(request.getParameter("id_partido"));
 
-        try {
-            // Obtener parámetros
-            String siglasPartido = request.getParameter("partidoElegido");
-         
-            String idUsuario = (String) sesion.getAttribute("idUsuarioVotado");
+            String destino = "vistasNavegacion/votar.jsp";
 
-            // Obtener datos del usuario que está votando
-            Usuario usuario = (Usuario) sesion.getAttribute("votar");
+            try {
+                ConexionBBDD eDao = new ConexionBBDD();
+            
 
-            if (usuario.getVoto() == 1) {
-                sesion.setAttribute("Mensaje error", "Ya has votado anteriormente.");
-                response.sendRedirect("errorUsuario/notificaciones.jsp");
-                return;
+                // 1. IDENTIFICAR LA ELECCIÓN ACTIVA
+                // Buscamos cuál es la elección que está "ABIERTA" ahora mismo    
+                ArrayList<Eleccion> elecciones = eDao.obtenerElecciones();
+                
+                Eleccion eleccionActiva = null;
+                for (Eleccion e : elecciones) {
+                    if ("ABIERTA".equalsIgnoreCase(e.getEstado())) {
+                        eleccionActiva = e;
+                        break;
+                    }
+                }
+
+                if (eleccionActiva == null) {
+                    throw new Exception("Error: No hay ninguna elección abierta en este momento.");
+                }
+
+                // 2. VERIFICAR SI YA VOTÓ
+                if (eDao.yaHaVotado(usuario.getId_usuario(), eleccionActiva.getId())) {
+                    throw new Exception("Usted ya ha ejercido su derecho al voto en estas elecciones.");
+                }
+
+                // 3. REGISTRAR VOTO
+                if (eDao.registrarVoto(usuario.getId_usuario(), eleccionActiva.getId(), idPartido)) {
+                    request.setAttribute("mensaje", "¡Su voto ha sido registrado correctamente! Gracias por participar.");
+                    // Actualizamos el usuario en sesión para que sepa que ya votó
+                    usuario.setVoto(1);
+                } else {
+                    request.setAttribute("error", "Hubo un error al guardar su voto. Inténtelo de nuevo.");
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                request.setAttribute("error", e.getMessage());
             }
 
-            
-            // Abrir conexión
-            ConexionBBDD bbdd = new ConexionBBDD();
-            
-            //obtener el id de la eleccion
-      int idEleccion=(int)sesion.getAttribute("idEleccion");
- 
-            // Obtener ID del partido real
-            int idPartido = Integer.parseInt(bbdd.id_partido(siglasPartido).trim());
+            request.getRequestDispatcher(destino).forward(request, response);
 
-            // obtener localidad
-            int idLocalidad = bbdd.obtenerLocalidadUsuarioVotado(idUsuario);
-
-            // Insertar el voto
-            int filas = bbdd.insertarVoto(idEleccion,idPartido,  idLocalidad);
-    
-          
-
-       if (filas > 0) {
-
-                // marcar al usuario como que ha votado
-                usuario.setVoto(1);
-                sesion.setAttribute("votar", usuario);
-
-                sesion.setAttribute("Mensaje error", "Voto emitido correctamente");
-                        int votoUsuario=bbdd.updateVoto(usuario.getVoto(), usuario.getDni());
-                response.sendRedirect("errorUsuario/notificaciones.jsp");
-                  bbdd.cerrarConexion();
-            } else {
-                sesion.setAttribute("Mensaje error", "Error al registrar el voto.");
-                response.sendRedirect("errorUsuario/notificaciones.jsp");
-                  bbdd.cerrarConexion();
-            }
-
-        } catch (Exception e) {
-            sesion.setAttribute("Mensaje error", e.getMessage());
-            response.sendRedirect("errorUsuario/notificaciones.jsp");
-        }
         }
 
 

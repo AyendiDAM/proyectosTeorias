@@ -1,8 +1,8 @@
 <%-- 
  Formulario para poder votar
 2.   Votar. Apertura escrutinio. 
-â€¢ Apertura de Votaciones. El administrador debe poner Escrutinio=â€Abiertoâ€. 
-â€¢ Los votantes ya pueden ejercer el voto, se acreditan al entrar con DNI y password y eligen el 
+? Apertura de Votaciones. El administrador debe poner Escrutinio=?Abierto?. 
+? Los votantes ya pueden ejercer el voto, se acreditan al entrar con DNI y password y eligen el 
 partido. Debemos controlar que no ha votado. Si el proceso es correcto, se informa al votante 
 de tal eventualidad  y se registra que ya ha votado. 
 --%>
@@ -14,82 +14,75 @@ de tal eventualidad  y se registra que ya ha votado.
 <%@page import="java.util.ArrayList"%>
 <%@page import="modelos.Usuario"%>
 <%
-
-
-    
-    Usuario usuarioVotar=(Usuario) session.getAttribute("votar");
-   
-
-
-  ConexionBBDD bbdd =null;
-ArrayList<Partido_politico> todosP=null;
-    try {
-           bbdd = new ConexionBBDD();
-if(usuarioVotar.getVoto()==0){
-         todosP=bbdd.verTodoPartido();
-             //
-            bbdd.cerrarConexion();
-
-}
-   
-            
-        
-             
-        } catch (ClassNotFoundException e1) {
-        session.setAttribute("Mensaje error", e1.getMessage());
-        response.sendRedirect("errorUsuario/notificaciones.jsp");
-    } catch (SQLException e2) {
-        session.setAttribute("Mensaje error", e2.getMessage());
-        response.sendRedirect("errorUsuario/notificaciones.jsp");
-    } 
-    %>
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+    // VALIDACIÓN DE SEGURIDAD
+    Usuario usuario = (Usuario) session.getAttribute("usuarioLogueado");
+    if (usuario == null) {
+        response.sendRedirect("login.jsp");
+        return;
+    }
+%>
 <!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ejercicio del Voto</title>
-</head>
-<body bgcolor="cyan">
-    <center>
-        <form action="../GestionVotoServlet" method="post">
-             <h2>SelecciÃ³n de Partido</h2>
-            
-            <p>Seleccione el partido polÃ­tico de su elecciÃ³n:</p>
-            
-    
- 
-            
-                    <table>
-             
-                        
-                        <% if(usuarioVotar.getVoto()==0){ %>
-            
-            <% for (Partido_politico partido : todosP) { %>
-     
-                <tr>
-                     <td>
-                         <input type="radio" name="partidoElegido" value="<%= partido.getSiglas()%>" required><%= partido.getSiglas()%></input>
-                    
-                        
-                   </td>
-                 
-                </tr>
-            <% }
-          session.setAttribute("votoUsuario", usuarioVotar.getVoto());
-               session.setAttribute("idUsuarioVotado", usuarioVotar.getDni());
+<html>
+    <head>
+        <title>Votación Electrónica</title>
+        <style>
+            .tarjeta-partido {
+                border: 1px solid #ccc;
+padding: 10px;
+margin: 10px;
+                display: inline-block;
+width: 200px;
+text-align: center;
+                border-radius: 8px;
+box-shadow: 2px 2px 5px #aaa;
+            }
+            .tarjeta-partido img {
+max-width: 100px;
+height: auto;
+}
+            .btn-votar {
+                background-color: #007bff;
+color: white;
+padding: 10px 20px;
+                text-decoration: none;
+border-radius: 5px;
+display: block;
+margin-top: 10px;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Bienvenido, <%= usuario.getNombre()%></h1>
+        <h2>Elija su papeleta</h2>
+
+        <% String msg = (String) request.getAttribute("mensaje");
+            String err = (String) request.getAttribute("error"); %>
+        <% if (msg != null) {%><h2 style="color:green"><%= msg%></h2><% } %>
+        <% if (err != null) {%><h2 style="color:red"><%= err%></h2><% } %>
+
+        <% if (msg == null) { // Si ya votó (msg éxito), ocultamos las papeletas %>
+        <div id="contenedor-papeletas">
+            <% 
+                ConexionBBDD pDao = new ConexionBBDD();
+              
+                ArrayList<Partido_politico> partidos = pDao.obtenerPartidos();
+
+                for (Partido_politico p : partidos) {
             %>
-            
-        </table>
-            
-            <input type="submit" name="votar" value="Emitir Voto">
-        </form>
-            <% } else { %>
+            <div class="tarjeta-partido">
+                <img src="../imagenes/<%= p.getLogo()%>" alt="Logo <%= p.getSiglas()%>">
+                <h3><%= p.getNombre()%></h3>
 
-<p>Ya has votado</p>
+                <form action="../GestionVotoServlet" method="POST">
+                    <input type="hidden" name="id_partido" value="<%= p.getId()%>">
+                    <button type="submit" class="btn-votar">Votar a <%= p.getSiglas()%></button>
+                </form>
+            </div>
+            <% } %>
+        </div>
+        <% }%>
 
-<% } %>
-    </center>
-</body>
+        <br><br>
+        <a href="logout.jsp">Cerrar Sesión</a>
+    </body>
 </html>

@@ -65,12 +65,12 @@ public class Login_Controlador extends HttpServlet {
                 // 4. Redirigir según el ROL (Requisito de la rúbrica)
                 String rol = usuarioLogueado.getRol();
                 
-                if (rol != null && (rol.equalsIgnoreCase("ADMIN") || rol.equalsIgnoreCase("ADMINISTRADOR"))) {
+                if (rol != null && (rol.equalsIgnoreCase("ADMIN"))) {
                     // Si es Admin, va a su panel de gestión
-                    destino = "vistasNavegacion/tablaAdmin.jsp"; // O gestionElecciones.jsp
+                     destino = "vistasNavegacion/tablaAdmin.jsp"; // O gestionElecciones.jsp
                 } else {
                     // Si es Votante, va a la página principal de votación
-                    destino = "vistasNavegacion/habilitarEleccion.jsp"; 
+                    destino = "vistasNavegacion/tablaVotante.jsp"; 
                 }
                 
             } else {
