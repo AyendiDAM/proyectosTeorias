@@ -1,0 +1,24 @@
+int id = Integer.parseInt(request.getParameter("id"));
+        String nuevoEstado = request.getParameter("accion"); // Recibe "ABIERTA" o "FINALIZADA"
+        
+        try {
+            ConexionBBDD conn = new ConexionBBDD();
+            EleccionDAO dao = new EleccionDAO(conn.getConexion());
+            
+            if(dao.actualizarEstado(id, nuevoEstado)){
+                String mensaje = "";
+                if(nuevoEstado.equals("ABIERTA")) mensaje = "¡Escrutinio Abierto! Los usuarios pueden votar.";
+                else mensaje = "Elección Finalizada. Resultados disponibles.";
+                
+                request.setAttribute("mensaje", mensaje);
+            } else {
+                request.setAttribute("error", "No se pudo cambiar el estado.");
+            }
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            request.setAttribute("error", e.getMessage());
+        }
+        
+        request.getRequestDispatcher("vistasNavegacion/gestionElecciones.jsp").forward(request, response);
+    }

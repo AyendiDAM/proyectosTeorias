@@ -1,3 +1,8 @@
-DNI=55052460b es admin
-DNI=55052460c es analista
-DNI=55052460I es votante
+// 2. Comprobar si el usuario YA está registrado en la app
+    public boolean existeUsuarioRegistrado(String dni) throws Exception {
+        String sql = "SELECT id_usuario FROM usuario WHERE dni = ?";
+        PreparedStatement pst = con.prepareStatement(sql);
+        pst.setString(1, dni);
+        ResultSet rs = pst.executeQuery();
+        return rs.next();
+    }
