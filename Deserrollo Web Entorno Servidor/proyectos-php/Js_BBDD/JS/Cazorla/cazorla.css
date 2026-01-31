@@ -1,0 +1,90 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  background-color: #f4f4f4;
+}
+
+/* Contenedor principal con Grid */
+.grid-layout {
+  display: grid;
+  grid-template-areas:
+    'header header'
+    'sidebar main '
+    'footer footer';
+  grid-template-columns: 1fr 3fr; /* Columna principal y sidebar */
+  grid-template-rows: auto 1fr auto;
+  min-height: 100vh;
+}
+
+header {
+  grid-area: header;
+  background-color: #4caf50;
+  color: white;
+  padding: 20px;
+  text-align: center;
+  font-size: 1.5em;
+}
+
+main {
+  grid-area: main;
+  background-color: white;
+  padding: 20px;
+}
+
+aside {
+  grid-area: sidebar;
+  background-color: #ddd;
+  padding: 20px;
+}
+
+footer {
+  grid-area: footer;
+  background-color: #333;
+  color: white;
+  text-align: center;
+  padding: 15px;
+}
+
+/* Responsive: en pantallas pequeñas, 1 columna */
+@media (max-width: 768px) {
+  .grid-layout {
+    grid-template-areas:
+      'header'
+      'main'
+      'sidebar'
+      'footer';
+    grid-template-columns: 1fr;
+  }
+}
+
+aside {
+  grid-area: sidebar;
+  background-color: #ddd;
+  padding: 0; /* Cambio 1: Quitamos el padding para que llenen todo */
+  /* El padding lo pasaremos al interior de los botones si es necesario */
+}
+
+.btn {
+  display: grid;
+  grid-template-columns: 1fr;
+  /* Cambio 2: Creamos 4 filas iguales (1 fracción cada una) */
+  grid-template-rows: repeat(4, 1fr);
+  height: 100%; /* El contenedor debe ocupar toda la altura del aside */
+  width: 100%; /* El contenedor debe ocupar todo el ancho */
+  margin: 0; /* Quitamos el margen auto */
+}
+
+/* Estilo opcional para que los botones se vean mejor estirados */
+.btn button {
+  width: 100%;
+  height: 100%; /* Ocupan toda la celda del grid */
+  border: none; /* Opcional: quitar bordes para un look más limpio */
+  background-color: #ddd; /* O el color que desees */
+  cursor: pointer;
+  border-bottom: 1px solid #999; /* Separador entre botones */
+  font-size: 1.1em;
+}
+
+.btn button:hover {
+  background-color: #ccc; /* Efecto hover */
+}

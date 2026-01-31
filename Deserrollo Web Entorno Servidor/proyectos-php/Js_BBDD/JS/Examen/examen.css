@@ -1,0 +1,40 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: rgb(107, 168, 220);
+}
+main {
+  width: 100%;
+  height: 100%;
+}
+.texto {
+  display: flex;
+  flex-direction: column;
+
+  width: 60%;
+  height: 50%;
+}
+.botones {
+  display: flex;
+  flex-direction: row;
+
+  gap: 2px;
+  width: 60%;
+  height: 50%;
+}
+label {
+  width: 10px;
+}
+input {
+  width: 200px;
+}
+.central {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  justify-content: center;
+  justify-items: center;
+  flex-direction: rowñ;
+}
