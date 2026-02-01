@@ -269,7 +269,7 @@
                     <div style="font-weight: 600; font-size: 0.9rem;"><%= usuario.getNombre()%></div>
                     <div style="font-size: 0.8rem; color: var(--text-muted);">DNI: <%= usuario.getDni()%></div>
                 </div>
-                <a href="home.jsp" style="color: var(--danger); font-weight:bold; text-decoration:none;">Salir</a>
+                <a href="../home.jsp" style="color: var(--danger); font-weight:bold; text-decoration:none;">Salir</a>
             </div>
         </aside>
 
@@ -348,14 +348,14 @@
                             <% if (e.getEstado().equals("ABIERTA")) { %>
 
                             <% if (!yaVoto) { %>
-                            <a href="votar.jsp" class="btn btn-primary">Ir a Votar</a>
+                            <a href="vistasNavegacion/votar.jsp" class="btn btn-primary">Ir a Votar</a>
                             <% } else { %>
                             <button class="btn btn-disabled" disabled>Ya has votado</button>
                             <% } %>
 
                             <% } else if (e.getEstado().equals("FINALIZADA")) { %>
 
-                            <a href="resultados.jsp" class="btn btn-secondary">Ver Escrutinio</a>
+                            <a href="vistasNavegacion/resultados.jsp" class="btn btn-secondary">Ver Escrutinio</a>
 
                             <% } else { %>
 

@@ -163,7 +163,7 @@
         %>
 
         <br>
-        <a href="tablaAdmin.jsp" style="padding:10px; background:#333; color:white; text-decoration:none; border-radius:5px;">Volver al Panel</a>
+        <a href="../home.jsp" style="padding:10px; background:#333; color:white; text-decoration:none; border-radius:5px;">Volver al Panel</a>
         <br><br>
     </body>
 </html>
