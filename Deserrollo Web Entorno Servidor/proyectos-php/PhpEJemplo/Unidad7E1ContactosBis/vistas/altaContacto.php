@@ -1,6 +1,11 @@
 <?php
-    require 'estilos.php';
-    session_start();
+   require 'estilos.php';
+
+    require '../modelos/Contacto.php';
+        require '../dao/ConexionBBDD.php';
+
+
+session_start();
 ?>
 <!DOCTYPE html>
 <html lang="es">

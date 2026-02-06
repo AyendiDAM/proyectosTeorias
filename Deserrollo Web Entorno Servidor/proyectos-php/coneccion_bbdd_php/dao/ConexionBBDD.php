@@ -2,6 +2,57 @@
 
 <?php
 
+//para reciger valores y formulario
+
+//formulario
+//deserializar
+require_once '../modelos/Contacto.php';
+
+//para modificar la bbdd
+
+require_once '../dao/Connecion.php';
+
+session_start();
+//recuperar atributo de session
+
+$contacto=unserialize($_SESSION['contacto']);//buscamos en nuestra session el id
+
+//la base de datos introducir
+
+try{
+  $bbdd=new ConexionBBDD();
+  $numero=$bbdd->modificarContacto($id_usuario,$nombre_nuevo);
+  if($numero===1){
+    $_SESSION['mensaje']="se ha modificado el contacto";
+    header('Location:url');
+  }else{
+    $_SESSION['error']="no se ha modificado";
+    header('Location:url');
+  }
+
+}catch(mysqli_sql_exception $ex){
+$_SESSION['error']="sql error";
+header('Location:../buscar vista');
+
+}finally{
+
+}
+
+//preguntamos si nos han pulsado el boton
+
+if(isset($_REQUEST['accion'])){
+//recojemos los valores que nos han enviado
+
+//nombre
+$nombre_nuevo=$_REQUEST['nombre'];
+
+//rediresionar
+
+$_SESSION['error']="No se ha encontrado";
+header('Location:../vistas/vistaError.php');
+
+}
+
 class ConexionBBDD{
     private $host;
      private $usuario;

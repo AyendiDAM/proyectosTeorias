@@ -1,0 +1,91 @@
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Contenedor del hexágono */
+.hexagono {
+  position: relative;
+  width: 100px;
+  height: 58px;
+  background-color: #ff6f61;
+  margin: 29px 0;
+  animation:
+    girar 4s linear infinite,
+    cambiarColor 6s ease-in-out infinite;
+}
+
+/* Parte superior e inferior del hexágono */
+.hexagono::before,
+.hexagono::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  border-left: 50px solid transparent;
+  border-right: 50px solid transparent;
+}
+
+.hexagono::before {
+  bottom: 100%;
+  border-bottom: 29px solid #ff6f61;
+}
+
+.hexagono::after {
+  top: 100%;
+  border-top: 29px solid #ff6f61;
+}
+
+/* Animación de rotación */
+@keyframes girar {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Animación de cambio de color */
+@keyframes cambiarColor {
+  0% {
+    background-color: #ff6f61;
+  }
+  33% {
+    background-color: #6fc3df;
+  }
+  66% {
+    background-color: #f7d154;
+  }
+  100% {
+    background-color: #ff6f61;
+  }
+}
+
+/* Sincronizar colores de las partes superior e inferior */
+.hexagono::before {
+  animation: cambiarColorBordes 6s ease-in-out infinite;
+}
+.hexagono::after {
+  animation: cambiarColorBordes 6s ease-in-out infinite;
+}
+
+@keyframes cambiarColorBordes {
+  0% {
+    border-bottom-color: #ff6f61;
+    border-top-color: #ff6f61;
+  }
+  33% {
+    border-bottom-color: #6fc3df;
+    border-top-color: #6fc3df;
+  }
+  66% {
+    border-bottom-color: #f7d154;
+    border-top-color: #f7d154;
+  }
+  100% {
+    border-bottom-color: #ff6f61;
+    border-top-color: #ff6f61;
+  }
+}

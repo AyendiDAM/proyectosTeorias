@@ -2,6 +2,7 @@ let compra = [
   { nombre: 'mesa', src: 'mesa.jpg', precio: 100 },
   { nombre: 'silla', src: 'silla.jpg', precio: 10 },
   { nombre: 'planta', src: 'planta.jpg', precio: 30 },
+
 ]
 const body = document.querySelector('body')
 const h1Titulo = document.createElement('H1')

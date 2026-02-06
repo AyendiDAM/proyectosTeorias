@@ -26,7 +26,7 @@ try {
         <br>
         <h1>Elige un contacto</h1>
         <br>
-        <form method="post" action="../controladores/buscarContacto.php">
+        <form method="post" action="modificarContacto.php">
         
              <select name='seleccionado'>
                 <?php
@@ -46,6 +46,8 @@ try {
         <br>
         <br>
         <button type="submit" name="buscar">Modificar Contacto</button>
+        <br><br>
+            <button type="submit" name="eliminar">Eliminar contacto</button>
     </form>    
     </center>
     </body>

@@ -2,7 +2,13 @@
 
 include_once 'conectar.php'; 
 
-$dni = $_GET['dni']; 
+    session_start();
+
+      if (isset($_REQUEST['accion'])){
+
+$data=json_decode(file_get_contents('php://input'),true);
+$dni = $data['dni'];
+
 
 $sql = "SELECT * FROM empleados WHERE dni = '$dni'"; 
 $result = $conn->query($sql); 
@@ -16,5 +22,5 @@ echo json_encode($row); //devolucion
 
 echo json_encode(['mensaje' => 'No se encontró ningún empleado con ese 
 DNI']); } 
-
+ }
 $conn->close(); ?> 

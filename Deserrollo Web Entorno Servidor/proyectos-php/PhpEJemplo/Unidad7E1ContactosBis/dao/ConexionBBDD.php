@@ -48,9 +48,11 @@ class ConexionBBDD {
         $sentencia=$this->conexion->prepare($orden);
         $sentencia->bind_param("sss", $nuevo->getNombre(),$nuevo->getApellidos(),$nuevo->getTelefono());
         $sentencia->execute();
+        $numero=$sentencia->affected_rows;
         if ($sentencia->affected_rows==0){
-            throw new mysqli_sql_exception("No se ha insertado el contacto");
+            throw new mysqli_sql_exception("Llego aquí");
         }
+return $numero;
     }   
     
 
@@ -72,6 +74,25 @@ class ConexionBBDD {
         }
     }
     
+
+//modificar contacto
+public function modificar_contacto($id_contacto,$nombre_nuevo,$apellido,$telefono){
+
+$order="UPDATE contactos SET nombre=?, apellidos=?,telefono=? WHERE id=?;";
+
+$sentencia=$this->conexion->prepare($order);
+$sentencia->bind_param("sssi",$nombre_nuevo,$apellido,$telefono,$id_contacto);
+$sentencia->execute();
+$numero=$sentencia->affected_rows;
+if($numero==0){
+    throw new mysqli_sql_exception();
+}else {
+    return $numero;
+}
+
+}
+
+
     
     //metodo para buscar un contacto en la tabla por id
 
@@ -100,6 +121,21 @@ return $contacto;
 }
 
     }
+        public function eliminar_tabla($id){
+$order="DELETE FROM contactos where id=?;";
+
+$sentencia=$this->conexion->prepare($order);
+$sentencia->bind_param("i",$id);
+$sentencia->execute();
+$numero=$sentencia->affected_rows;
+if($numero==0){
+    throw new mysqli_sql_exception();
+}else {
+    return $numero;
+}
+
+    }
+
     
     
 }//clase ConexionBBDD

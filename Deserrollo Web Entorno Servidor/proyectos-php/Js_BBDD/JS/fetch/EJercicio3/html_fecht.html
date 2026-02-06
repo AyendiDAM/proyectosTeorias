@@ -7,10 +7,15 @@
   </head>
   <body>
     <div>
-<button id="pulsar">pulsar</button>
-<p id="contenido"></p>
-<img id="imagen"></img>
-</div>
+      <form action="buscar_empleado.php" method="POST">
+        <!-- Campo de texto -->
+        <label for="dni">Buscar DNI:</label>
+        <input type="text" id="dni" name="dni" required minlength="2" maxlength="50" />
+
+        <!-- Botón de envío -->
+        <button type="submit" name="accion">Enviar</button>
+      </form>
+    </div>
     <script src="fetch.js"></script>
   </body>
 </html>
